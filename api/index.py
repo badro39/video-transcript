@@ -3,6 +3,13 @@ from youtube_transcript_api import YouTubeTranscriptApi
 
 app = Flask(__name__)
 
+@app.route('/debug-installed')
+def debug_installed():
+    import pkg_resources
+    packages = sorted([f"{d.project_name}=={d.version}" for d in pkg_resources.working_set])
+    return jsonify(packages)
+
+
 @app.route('/generate-vtt', methods=['GET'])
 def generate_vtt():
     video_id = request.args.get('video_id')
@@ -33,4 +40,4 @@ def generate_vtt():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#app.run(host='0.0.0.0', port=5000, debug=True)
+app.run(host='0.0.0.0', port=5000, debug=True)
