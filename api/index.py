@@ -5,9 +5,16 @@ app = Flask(__name__)
 
 @app.route('/debug-installed')
 def debug_installed():
-    import pkg_resources
-    packages = sorted([f"{d.project_name}=={d.version}" for d in pkg_resources.working_set])
-    return jsonify(packages)
+    try:
+        import pkg_resources
+        packages = sorted([f"{d.project_name}=={d.version}" for d in pkg_resources.working_set])
+        return jsonify(packages)
+    except Exception as e:
+        import traceback
+        return jsonify({
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
 
 
 @app.route('/generate-vtt', methods=['GET'])
